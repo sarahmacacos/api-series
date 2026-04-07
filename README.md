@@ -1,4 +1,4 @@
-# API de Séries 🎬
+# API de Séries v1
 
 API REST para gerenciamento de séries de TV, desenvolvida com **Node.js** e **Express**.
 
