@@ -1,249 +1,281 @@
-# 📺 API de Séries
+# API de Séries 🎬
 
-API REST desenvolvida em **Node.js com Express** para gerenciamento de séries de TV.  
-Permite realizar operações CRUD completas com validação de dados e tratamento de erros.
+API REST para gerenciamento de séries de TV, desenvolvida com **Node.js** e **Express**.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## Sumário
+
+- [Sobre o Projeto](#sobre-o-projeto)
+- [Tecnologias](#tecnologias)
+- [Como Executar](#como-executar)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Endpoints da API](#endpoints-da-api)
+  - [GET /api/series](#1-listar-todas-as-séries)
+  - [GET /api/series/:id](#2-buscar-série-por-id)
+  - [POST /api/series](#3-criar-nova-série)
+- [Validações Implementadas](#validações-implementadas)
+- [Exemplos de Requisição no Postman](#exemplos-de-requisição-no-postman)
+- [Capturas de Tela dos Testes](#capturas-de-tela-dos-testes)
+- [Dados Iniciais](#dados-iniciais)
+
+---
+
+## Sobre o Projeto
+
+Esta API permite listar, buscar e cadastrar séries de TV. Os dados são armazenados em memória (array no controller). As 3 primeiras séries foram cadastradas diretamente no código-fonte (VSCode), e as demais foram adicionadas via Postman.
+
+---
+
+## Tecnologias
 
 - **Node.js**
-- **Express.js**
-- **Armazenamento em memória** (array)
+- **Express 5.2**
+- **Postman** (para testes de API)
 
 ---
 
-## 📁 Estrutura do Projeto
+## Como Executar
+
+```bash
+# Instalar dependências
+npm install
+
+# Iniciar o servidor
+npm start
+```
+
+O servidor será iniciado em `http://localhost:3000`.
+
+---
+
+## Estrutura do Projeto
 
 ```
 api-series/
+├── assets/                  # Capturas de tela dos testes
 ├── controllers/
-│   └── seriesController.js   # Lógica das operações CRUD
+│   └── seriesController.js  # Lógica dos endpoints (CRUD)
 ├── routes/
-│   └── seriesRoutes.js       # Definição das rotas
-├── assets/                   # Prints dos testes no Postman
-├── server.js                 # Arquivo principal do servidor
+│   └── seriesRoutes.js      # Definição das rotas
+├── server.js                # Configuração do Express e porta
 ├── package.json
 └── README.md
 ```
 
 ---
 
-## ▶️ Como Executar
+## Endpoints da API
 
-```bash
-# 1. Clone o repositório
-git clone https://github.com/sarahmacacos/api-series.git
-cd api-series
+### 1. Listar todas as séries
 
-# 2. Instale as dependências
-npm install
+| Campo     | Valor                              |
+|-----------|-------------------------------------|
+| **Método**  | `GET`                              |
+| **URL**     | `http://localhost:3000/api/series`  |
+| **Body**    | Nenhum                             |
 
-# 3. Inicie o servidor
-node server.js
-```
+**Resposta — `200 OK`:**
 
-Servidor rodando em: `http://localhost:3000`
-
----
-
-## 📋 Endpoints
-
-### Base URL
-```
-http://localhost:3000/api/series
-```
-
----
-
-### ✅ GET /api/series — Listar todas as séries
-
-**Requisição:**
-```
-GET http://localhost:3000/api/series
-```
-
-**Resposta (200 OK):**
 ```json
 [
-  { "id": 1, "titulo": "Stranger Things", "genero": "Ficção Científica", "ano": 2016 },
-  { "id": 2, "titulo": "Breaking Bad", "genero": "Drama", "ano": 2008 }
+  {
+    "id": 1,
+    "titulo": "Stranger Things",
+    "genero": "Ficção Científica",
+    "ano": 2016
+  },
+  {
+    "id": 2,
+    "titulo": "Breaking Bad",
+    "genero": "Drama",
+    "ano": 2008
+  }
 ]
 ```
 
-![GET todas as séries](assets/get-all.png)
+> Retorna um array JSON com todas as séries cadastradas.
 
 ---
 
-### ✅ GET /api/series/:id — Buscar série por ID
+### 2. Buscar série por ID
 
-**Requisição:**
-```
-GET http://localhost:3000/api/series/1
-```
+| Campo     | Valor                                   |
+|-----------|-----------------------------------------|
+| **Método**  | `GET`                                  |
+| **URL**     | `http://localhost:3000/api/series/:id` |
+| **Body**    | Nenhum                                 |
 
-**Resposta (200 OK):**
+**Exemplo:** `GET http://localhost:3000/api/series/3`
+
+**Resposta — `200 OK`:**
+
 ```json
 {
-  "id": 1,
-  "titulo": "Stranger Things",
+  "id": 3,
+  "titulo": "Game of Thrones",
+  "genero": "Fantasia",
+  "ano": 2011
+}
+```
+
+**Resposta de erro — `404 Not Found` (ID inexistente):**
+
+```json
+{
+  "erro": "Serie nao encontrada."
+}
+```
+
+---
+
+### 3. Criar nova série
+
+| Campo     | Valor                              |
+|-----------|-------------------------------------|
+| **Método**  | `POST`                             |
+| **URL**     | `http://localhost:3000/api/series`  |
+| **Headers** | `Content-Type: application/json`   |
+| **Body**    | JSON (raw)                         |
+
+**Body da requisição:**
+
+```json
+{
+  "titulo": "Black Mirror",
   "genero": "Ficção Científica",
-  "ano": 2016
+  "ano": 2011
 }
 ```
 
-![GET série por ID](assets/get-id.png)
+**Resposta — `201 Created`:**
 
----
-
-### ✅ POST /api/series — Criar nova série
-
-**Requisição:**
-```
-POST http://localhost:3000/api/series
-Content-Type: application/json
-```
-
-**Body:**
 ```json
 {
-  "titulo": "La Casa de Papel",
-  "genero": "Crime",
-  "ano": 2017
+  "id": 6,
+  "titulo": "Black Mirror",
+  "genero": "Ficção Científica",
+  "ano": 2011
 }
 ```
 
-**Resposta (201 Created):**
+> O campo `id` é gerado automaticamente pela API.
+
+**Resposta de erro — `400 Bad Request` (sem título):**
+
 ```json
 {
-  "id": 11,
-  "titulo": "La Casa de Papel",
-  "genero": "Crime",
-  "ano": 2017
+  "erro": "O campo titulo e obrigatorio."
 }
-```
-
-![POST criar série](assets/post-criar.png)
-
-**Validações — Resposta (400 Bad Request):**
-```json
-{ "erro": "O campo titulo e obrigatorio." }
-{ "erro": "O campo genero e obrigatorio." }
-{ "erro": "O campo ano e obrigatorio." }
 ```
 
 ---
 
-### ✅ PUT /api/series/:id — Atualizar série
+## Validações Implementadas
 
-**Requisição:**
-```
-PUT http://localhost:3000/api/series/5
-Content-Type: application/json
-```
+A API possui as seguintes validações no endpoint `POST /api/series`:
 
-**Body:**
+| Validação | Descrição | Resposta |
+|-----------|-----------|----------|
+| **Título obrigatório** | O campo `titulo` é obrigatório. Se não for enviado, a API retorna erro `400`. | `{ "erro": "O campo titulo e obrigatorio." }` |
+| **Campos opcionais** | Os campos `genero` e `ano` são opcionais. Se não forem informados, serão salvos como `null`. | Série criada com campos `null` |
+| **ID automático** | O `id` é gerado automaticamente com base no tamanho do array (`series.length + 1`). | ID sequencial |
+
+No endpoint `GET /api/series/:id`:
+
+| Validação | Descrição | Resposta |
+|-----------|-----------|----------|
+| **Série não encontrada** | Se o `id` informado não existir no array, retorna erro `404`. | `{ "erro": "Serie nao encontrada." }` |
+| **Conversão de tipo** | O parâmetro `id` da URL é convertido para `Number` antes da busca. | Garante comparação correta |
+
+---
+
+## Exemplos de Requisição no Postman
+
+### Exemplo 1 — POST para criar "Friends"
+
+**Configuração no Postman:**
+- Método: `POST`
+- URL: `http://localhost:3000/api/series`
+- Body → raw → JSON:
+
 ```json
 {
-  "titulo": "Dark",
-  "genero": "Mistério",
-  "ano": 2017
+  "titulo": "Friends",
+  "genero": "Comédia",
+  "ano": 1994
 }
 ```
 
-**Resposta (200 OK):**
+**Resultado:** `201 Created` — Série criada com sucesso.
+
+---
+
+### Exemplo 2 — POST para criar "Black Mirror"
+
+**Configuração no Postman:**
+- Método: `POST`
+- URL: `http://localhost:3000/api/series`
+- Body → raw → JSON:
+
 ```json
 {
-  "id": 5,
-  "titulo": "Dark",
-  "genero": "Mistério",
-  "ano": 2017
+  "titulo": "Black Mirror",
+  "genero": "Ficção Científica",
+  "ano": 2011
 }
 ```
 
-![PUT atualizar série](assets/put.png)
-
-**Resposta (404 Not Found):**
-```json
-{ "erro": "Serie nao encontrada." }
-```
+**Resultado:** `201 Created` — Série criada com sucesso.
 
 ---
 
-### ✅ DELETE /api/series/:id — Deletar série
+### Exemplo 3 — GET para listar todas as séries
 
-**Requisição:**
-```
-DELETE http://localhost:3000/api/series/10
-```
+**Configuração no Postman:**
+- Método: `GET`
+- URL: `http://localhost:3000/api/series`
 
-**Resposta (204 No Content):**  
-Sem body na resposta — comportamento correto para DELETE.
-
-![DELETE 204](assets/delete-204.png)
-
-**Resposta (404 Not Found):**
-```json
-{ "erro": "Serie nao encontrada." }
-```
-
-![DELETE 404](assets/delete-404.png)
+**Resultado:** `200 OK` — Retorna o array com todas as séries.
 
 ---
 
-## 🔒 Validações Implementadas
+### Exemplo 4 — GET para buscar série por ID
 
-| Campo    | Regra                             |
-|----------|-----------------------------------|
-| `titulo` | Obrigatório no POST               |
-| `genero` | Obrigatório no POST               |
-| `ano`    | Obrigatório no POST               |
-| `id`     | Deve existir no GET, PUT e DELETE |
+**Configuração no Postman:**
+- Método: `GET`
+- URL: `http://localhost:3000/api/series/1`
 
----
-
-## 📊 Status Codes Utilizados
-
-| Código | Significado  | Quando é usado               |
-|--------|--------------|------------------------------|
-| 200    | OK           | GET e PUT bem-sucedidos      |
-| 201    | Created      | POST bem-sucedido            |
-| 204    | No Content   | DELETE bem-sucedido          |
-| 400    | Bad Request  | Campos obrigatórios ausentes |
-| 404    | Not Found    | Série não encontrada pelo ID |
+**Resultado:** `200 OK` — Retorna os dados de "Stranger Things".
 
 ---
 
-## 🎬 Dados Iniciais (10 séries)
+## Capturas de Tela dos Testes
 
-| ID | Título           | Gênero            | Ano  |
-|----|------------------|-------------------|------|
-| 1  | Stranger Things  | Ficção Científica | 2016 |
-| 2  | Breaking Bad     | Drama             | 2008 |
-| 3  | Game of Thrones  | Fantasia          | 2011 |
-| 4  | The Walking Dead | Terror            | 2010 |
-| 5  | Dark             | Ficção Científica | 2017 |
-| 6  | Friends          | Comédia           | 1994 |
-| 7  | The Office       | Comédia           | 2005 |
-| 8  | Black Mirror     | Ficção Científica | 2011 |
-| 9  | Euphoria         | Drama             | 2019 |
-| 10 | The Witcher      | Fantasia          | 2019 |
+### POST no Postman — Criando "Friends"
+
+![POST Friends no Postman](./assets/postman-post-friends.png)
+
+### POST no Postman — Criando "Black Mirror"
+
+![POST Black Mirror no Postman](./assets/postman-post-blackmirror.png)
 
 ---
 
-## 🧪 Collection do Postman
+## Dados Iniciais
 
-Importe o arquivo `collection.postman_collection.json` no Postman para testar todos os endpoints.
+As 3 primeiras séries foram cadastradas diretamente no código-fonte (`seriesController.js`). As séries 4 a 7 foram adicionadas via Postman.
 
-**Testes incluídos:**
-- GET todas as séries
-- GET série por ID (existente)
-- GET série por ID (não encontrada — 404)
-- POST criar série (sucesso)
-- POST sem título (erro 400)
-- POST sem gênero (erro 400)
-- POST sem ano (erro 400)
-- PUT atualizar série (sucesso)
-- PUT série inexistente (404)
-- DELETE série (sucesso — 204)
-- DELETE série inexistente (404)
+| ID | Título           | Gênero              | Ano  | Origem   |
+|----|------------------|----------------------|------|----------|
+| 1  | Stranger Things  | Ficção Científica    | 2016 | VSCode   |
+| 2  | Breaking Bad     | Drama                | 2008 | VSCode   |
+| 3  | Game of Thrones  | Fantasia             | 2011 | VSCode   |
+| 4  | Dark             | Ficção               | 2017 | Postman  |
+| 5  | Friends          | Comédia              | 1994 | Postman  |
+| 6  | Black Mirror     | Ficção Científica    | 2011 | Postman  |
+| 7  | The Office       | Comédia              | 2005 | Postman  |
+
+---
+
+> Projeto desenvolvido para prática de criação de APIs REST com Node.js e Express.
